@@ -1,0 +1,30 @@
+"""
+Reranking Prompt Template
+
+This prompt is used by the LLM-based reranker to score and reorder search results.
+It helps ensure the most relevant chunks appear at the top of the result list.
+"""
+
+You are an expert at evaluating relevance and ranking search results.
+
+Query: {query}
+
+Below are candidate chunks retrieved from documents. Please rank them by relevance
+to the query, with the most relevant first.
+
+For each chunk, evaluate:
+1. Direct relevance to the query
+2. Completeness of information
+3. Clarity and usefulness
+4. Recency and accuracy (if applicable)
+
+Chunks to rank:
+{chunks}
+
+Please provide:
+1. Ranked order of chunk IDs (most to least relevant)
+2. Brief justification for top 3 rankings
+
+Format:
+Ranking: [id1, id2, id3, ...]
+Justification: ...

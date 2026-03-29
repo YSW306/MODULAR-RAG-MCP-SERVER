@@ -1,0 +1,162 @@
+# Modular RAG MCP Server Configuration
+# Version: 0.1.0
+
+# ============================================================================
+# LLM Configuration (Required)
+# ============================================================================
+llm:
+  provider: "openai"  # Options: openai, azure, ollama, deepseek
+  model: "gpt-4o"
+  api_key: "${OPENAI_API_KEY}"  # Will be replaced with env var
+  temperature: 0.7
+  max_tokens: 2048
+  # For Azure:
+  # azure_endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  # api_version: "2024-02-15-preview"
+  # deployment_name: "gpt-4o"
+  # For Ollama:
+  # base_url: "http://localhost:11434"
+
+# ============================================================================
+# Embedding Configuration (Required)
+# ============================================================================
+embedding:
+  provider: "openai"  # Options: openai, azure, ollama
+  model: "text-embedding-3-small"
+  api_key: "${OPENAI_API_KEY}"
+  dimensions: 1536
+  # For Azure:
+  # azure_endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  # api_version: "2024-02-15-preview"
+  # deployment_name: "text-embedding-3-small"
+  # For Ollama:
+  # base_url: "http://localhost:11434"
+  # model: "nomic-embed-text"
+  # dimensions: 768
+
+# ============================================================================
+# Vision LLM Configuration (Optional, for image captioning)
+# ============================================================================
+vision_llm:
+  enabled: false  # Set to true to enable image captioning
+  provider: "openai"  # Options: openai, azure, ollama
+  model: "gpt-4o"
+  api_key: "${OPENAI_API_KEY}"
+  # For separate vision API key:
+  # api_key: "${VISION_API_KEY}"
+  # For Azure:
+  # azure_endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  # api_version: "2024-02-15-preview"
+  # deployment_name: "gpt-4o"
+
+# ============================================================================
+# Vector Store Configuration (Required)
+# ============================================================================
+vector_store:
+  provider: "chroma"  # Options: chroma, qdrant, pinecone
+  path: "data/db/chroma"  # For local stores
+  # For Qdrant/Pinecone, configure collections and API keys as needed
+
+# ============================================================================
+# Retrieval Configuration
+# ============================================================================
+retrieval:
+  # Hybrid search settings
+  top_k_dense: 20
+  top_k_sparse: 20
+  top_k_final: 10
+  rrf_k: 60  # RRF fusion parameter
+
+  # Metadata filters (optional)
+  # filters:
+  #   collection: "default"
+
+# ============================================================================
+# Reranker Configuration (Optional)
+# ============================================================================
+reranker:
+  enabled: false  # Set to true to enable reranking
+  provider: "none"  # Options: none, cross_encoder, llm
+  # For cross_encoder:
+  # model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  # For llm reranker, will use the LLM configured above
+
+# ============================================================================
+# Evaluation Configuration (Optional)
+# ============================================================================
+evaluation:
+  enabled: false
+  providers: ["ragas"]  # Can be: ragas, custom, or both
+  # Ragas-specific settings
+  ragas:
+    faithfulness_threshold: 0.75
+    relevancy_threshold: 0.75
+
+# ============================================================================
+# Ingestion Configuration
+# ============================================================================
+ingestion:
+  # Document processing settings
+  chunking:
+    provider: "recursive"  # Options: recursive, semantic, fixed_length
+    chunk_size: 1024
+    chunk_overlap: 200
+    separators: ["\n\n", "\n", " ", ""]
+
+  # Text refinement settings
+  chunk_refiner:
+    enabled: false  # Set to true to enable LLM-based refinement
+    use_llm: false
+
+  # Metadata enrichment settings
+  metadata_enricher:
+    enabled: false
+    use_llm: false
+
+  # Image captioning settings
+  image_captioning:
+    enabled: false
+    use_vision_llm: false
+
+  # Batch processing
+  batch_size: 10
+
+# ============================================================================
+# Observability Configuration
+# ============================================================================
+observability:
+  logging:
+    level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    format: "json"  # Options: json, text
+    file: "logs/app.log"
+
+  tracing:
+    enabled: true
+    output_file: "logs/traces.jsonl"
+    trace_level: "INFO"
+
+  dashboard:
+    enabled: true
+    host: "0.0.0.0"
+    port: 8501
+
+# ============================================================================
+# Storage Configuration
+# ============================================================================
+storage:
+  # Data storage paths
+  documents_path: "data/documents"
+  images_path: "data/images"
+  db_path: "data/db"
+  cache_path: "cache"
+  logs_path: "logs"
+
+  # Database settings
+  sqlite:
+    # For ingestion history and image index
+    ingestion_history: "data/db/ingestion_history.db"
+    image_index: "data/db/image_index.db"
+
+  # BM25 index settings
+  bm25:
+    path: "data/db/bm25"

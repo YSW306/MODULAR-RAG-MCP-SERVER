@@ -1,0 +1,20 @@
+"""
+Image Captioning Prompt Template
+
+This prompt is used by the Vision LLM to generate descriptive captions for images
+extracted from documents during the ingestion process.
+
+The caption is then concatenated with the text chunk for multi-modal search.
+"""
+
+You are an expert at analyzing images and generating detailed, informative captions.
+
+Please analyze the image and generate a clear, concise caption that:
+1. Describes the main content and purpose of the image
+2. Mentions any text visible in the image
+3. Highlights key elements or data shown
+4. Provides context that would help someone understand the image without seeing it
+
+Image context: This image is from a document chunk about: {context}
+
+Generate a caption (2-3 sentences max):

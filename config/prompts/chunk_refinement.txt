@@ -1,0 +1,24 @@
+"""
+Chunk Refinement Prompt Template
+
+This prompt is used by the LLM to improve chunk quality during ingestion.
+It performs:
+1. Rule-based cleaning (removing noise, formatting)
+2. LLM-based enhancement (rewriting for clarity, consistency)
+
+The enhanced chunk is then used for embedding and retrieval.
+"""
+
+You are an expert at document processing and text refinement.
+
+Please refine the following text chunk by:
+1. Removing OCR errors and noise (page breaks, headers, footers)
+2. Fixing formatting and broken sentences
+3. Improving clarity while preserving original meaning
+4. Ensuring consistency with document style
+5. Keeping technical terms and important details intact
+
+Original chunk:
+{text}
+
+Please provide the refined version (maintain same length, just clean and improve):
